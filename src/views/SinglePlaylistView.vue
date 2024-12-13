@@ -77,6 +77,7 @@ watch(
     <div v-if="loading">Chargement...</div>
     <div v-else>
       <div class="container">
+        <h2>{{ PlaylistsComponent.name }}</h2>
         <table class="">
           <thead class="">
             <tr>
