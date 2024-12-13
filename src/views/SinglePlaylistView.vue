@@ -3,7 +3,6 @@ import { ref, onMounted, defineEmits, defineProps, watch } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import
 
 const route = useRoute()
 
