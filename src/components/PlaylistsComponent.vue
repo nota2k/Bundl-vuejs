@@ -35,7 +35,8 @@ onMounted(() => {
     <div v-if="loading">Chargement...</div>
     <div v-else>
       <div class="container">
-        <h2>Playlists Pawtify</h2>
+        <button class="close" @click="$emit('close')">Fermer</button>
+        <h2>Playlists Spawtify</h2>
         <ul>
           <li v-for="detail in playlists" :key="detail.id">
             <router-link
@@ -55,11 +56,27 @@ onMounted(() => {
   grid-column-start: 1;
 }
 
+.close {
+  width: 50px;
+  height: 50px;
+  background-color: var(--yellow);
+  display: none;
+  position: absolute;
+  right: -45px;
+  z-index: 50;
+  transform-origin: left;
+  border-radius: 0 40px 40px 0;
+}
+
 @media screen and (max-width: 768px) {
   .playlist-wrapper {
-    position: relative;
+    position: fixed;
     transform: translateX(-100%);
-    max-width: 250px;
+    top: 130px;
+  }
+
+  .close {
+    display: block;
   }
 }
 
@@ -69,13 +86,12 @@ onMounted(() => {
   align-items: center;
   border: 2px solid black;
   max-height: 60vh;
-  overflow: scroll;
   position: relative;
 }
 
 h2 {
   width: -moz-available;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   position: sticky;
   top: 0;
   background: white;
@@ -88,12 +104,18 @@ h2 {
 ul {
   list-style-type: none;
   padding: 0;
-  width: 80%;
+  margin-top: 0;
+  overflow: scroll;
 }
 
 li {
-  margin: 0.5em 0;
+  margin: 0;
+  padding: 10px;
   cursor: pointer;
+}
+
+li:nth-child(odd) {
+  background: #f9f9f9;
 }
 
 a {

@@ -115,8 +115,18 @@ li img.dog {
 
 @media screen and (max-width: 768px) {
   aside {
-    grid-column-start: 1;
-    grid-row-start: -1;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+    top: initial;
+  }
+  ul {
+    width: 100%;
+    display: flex;
+  }
+
+  li {
+    flex-grow: 2;
   }
 }
 </style>

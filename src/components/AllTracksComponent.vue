@@ -36,13 +36,13 @@ const emitTrackTitle = (title) => {
         <thead class="">
           <tr>
             <th class="">
+              <span>Titre</span>
+            </th>
+            <th class="">
               <span>Artiste</span>
             </th>
             <th class="">
               <span>Album</span>
-            </th>
-            <th class="">
-              <span>Titre</span>
             </th>
             <th class=""><span>Ajouté le</span></th>
             <th class=""><span> </span></th>
@@ -51,16 +51,16 @@ const emitTrackTitle = (title) => {
 
         <tbody>
           <tr v-for="detail in trackList" :key="detail.id">
+            <td class="title">
+              {{ detail.track.title }}
+            </td>
             <th>
               {{ detail.track.artist }}
             </th>
-            <td class="">
+            <td class="album">
               {{ detail.track.album }}
             </td>
-            <td class="">
-              {{ detail.track.title }}
-            </td>
-            <td class="">
+            <td class="added">
               {{ detail.track.added_at }}
             </td>
             <td class="to-youtube">
