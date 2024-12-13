@@ -3,9 +3,29 @@ html {
   height: max-content;
 }
 
+@font-face {
+  font-family: 'Eras';
+  src: url(fonts/ERASBD.TTF);
+}
+
 main {
   display: grid;
-  grid-template-columns: 280px auto 180px;
+  grid-template-columns: 280px auto 130px;
   grid-template-rows: 80px auto;
   gap: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.container {
+  border: 2px solid black;
+}
+
+:root {
+  --yellow: #ffe13f;
 }

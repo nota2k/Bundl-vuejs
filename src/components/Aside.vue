@@ -1,16 +1,32 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits(['exportJson'])
+</script>
 
 <template>
   <aside>
     <ul class="actions">
       <li>
-        <a href="#" class="button primary"><img src="../assets/dog_1.svg" /></a>
+        <a href="#" class="button primary">
+          <img class="dog" src="../assets/dog_1.svg" />
+          <div class="label">
+            <p>Sync</p>
+            <img src="../assets/sync.png" />
+          </div>
+        </a>
       </li>
       <li>
-        <a href="#" class="button primary"><img src="../assets/dog_2.svg" /></a>
+        <a href="#" class="button primary">
+          <img class="dog" src="../assets/dog_2.svg" />
+        </a>
       </li>
       <li>
-        <a href="#" class="button primary"><img src="../assets/dog_3.svg" /></a>
+        <a href="#" class="button primary" @click.prevent="emit('exportJson')">
+          <img class="dog" src="../assets/dog_3.svg" />
+          <div class="label">
+            <p>Expaw</p>
+            <img src="../assets/export.png" />
+          </div>
+        </a>
       </li>
     </ul>
   </aside>
@@ -20,10 +36,87 @@
 aside {
   grid-column-start: 3;
   grid-row-start: 2;
+  position: sticky;
+  top: 5%;
+  align-self: start;
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+}
+li {
+  margin: 0.5em 0;
+  position: relative;
+}
+
+li a {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+li::before {
+  content: '';
+  display: block;
+  height: 80%;
+  width: 80%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--yellow);
+  border-radius: 100%;
+  margin: 0.5em 0;
+  position: absolute;
+}
+
+.label {
+  opacity: 0;
+  position: absolute;
+  color: black;
+  font-size: 2em;
+  transition: 0.2s ease-in-out all;
+}
+
+.label p {
+  margin-bottom: 0;
+  font-family: 'Eras Demi ITC';
+}
+
+.label img {
+  width: 40px;
+  margin-left: 25px;
+}
+
+li:hover .label {
+  opacity: 1;
+}
+
+li:hover img.dog {
+  opacity: 0.5;
+}
+
+li img.dog {
+  transition: 0.2s ease-in-out all;
+  animation: helloDogs 0.7s infinite;
+  animation-fill-mode: both;
+  animation-direction: alternate-reverse;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes helloDogs {
+  0% {
+    transform: rotate(-20deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  aside {
+    grid-column-start: 1;
+    grid-row-start: -1;
+  }
 }
 </style>

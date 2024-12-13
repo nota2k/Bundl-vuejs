@@ -13,9 +13,10 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/getvideo',
+      path: '/getvideo/:title',
       name: 'getvideo',
-      component: GetVideoView
+      component: GetVideoView,
+      props: true
     },
     {
       path: '/getplaylists',

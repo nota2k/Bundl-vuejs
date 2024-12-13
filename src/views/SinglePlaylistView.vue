@@ -3,6 +3,10 @@ import { ref, onMounted, defineEmits, defineProps, watch } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 import { useRoute } from 'vue-router'
+import Header from '@/components/Header.vue'
+import Aside from '@/components/Aside.vue'
+import PlaylistsComponent from '@/components/PlaylistsComponent.vue'
+import AllTracksComponent from '@/components/AllTracksComponent.vue'
 
 const route = useRoute()
 
@@ -29,6 +33,23 @@ const fetchPlaylistDetails = (id) => {
     })
 }
 
+const exportToJson = () => {
+  const jsonData = JSON.stringify(tracksInplaylists.value, null, 2)
+  const blob = new Blob([jsonData], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'tracksInplaylists.json'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+const emit = defineEmits(['getTrackTitle'])
+
+const emitTrackTitle = (title) => {
+  emit('getTrackTitle', title)
+}
+
 onMounted(() => {
   if (route.params.id) {
     fetchPlaylistDetails(route.params.id)
@@ -50,6 +71,9 @@ watch(
 
 <template>
   <main>
+    <Header />
+    <PlaylistsComponent />
+    <Aside @exportJson="exportToJson" />
     <div v-if="loading">Chargement...</div>
     <div v-else>
       <div class="container">
@@ -58,15 +82,12 @@ watch(
             <tr>
               <th class="">
                 <span>Artiste</span>
-                <MoveDown :size="15" />
               </th>
               <th class="">
                 <span>Album</span>
-                <MoveDown :size="15" />
               </th>
               <th class="">
                 <span>Titre</span>
-                <MoveDown :size="15" />
               </th>
               <th class=""><span>Ajouté le</span></th>
               <th class=""><span> </span></th>
@@ -88,7 +109,10 @@ watch(
                 {{ detail.track.added_at }}
               </td>
               <td class="to-youtube">
-                <router-link :to="{ name: 'getvideo' }" class="yt">
+                <router-link
+                  :to="{ name: 'getvideo', params: { title: detail.track.title } }"
+                  class="yt"
+                >
                   <button class="yt" @click="emitTrackTitle(detail.track.title)">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

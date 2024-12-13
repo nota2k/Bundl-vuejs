@@ -1,8 +1,15 @@
+<script setup>
+import { ref, onMounted, defineEmits, defineProps } from 'vue'
+import { useRoute } from 'vue-router'
+</script>
+
 <template>
   <header>
-    <div class="logo-wrapper">
-      <img src="../assets/logo_babines.svg" alt="logo" />
-    </div>
+    <router-link :to="{ name: 'home' }">
+      <div class="logo-wrapper">
+        <img src="../assets/logo_babines.svg" alt="logo" />
+      </div>
+    </router-link>
   </header>
 </template>
 

@@ -1,56 +1,60 @@
 <script setup>
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
-import { ref, onMounted, computed, defineProps } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import Header from '@/components/Header.vue'
+import Aside from '@/components/Aside.vue'
+import PlaylistsComponent from '@/components/PlaylistsComponent.vue'
 
 let listVideo = ref([])
 
-const props = defineProps({
-  trackTitle: String
-})
-
+const route = useRoute()
+const trackTitle = route.params.title
+const selectedFilter = ref([])
 onMounted(() => {
   axios
-    .get('https://pantagruweb.club/tentacules/webhook/49296f58-136d-4a67-a320-f16e9da7ba33')
+    .get(`https://pantagruweb.club/tentacules/webhook/searchvideos?title=${trackTitle}`)
     .then((response) => {
       console.log(response.data)
       listVideo.value = response.data
     })
 })
-// console.log(listVideo)
-const filteredVideos = computed(() => {
-  if (selectedFilter.value === 'all') {
-    return listVideo.value
-  }
-  return listVideo.value.filter((video) => video.category === selectedFilter.value)
-})
 
-console.log(trackTitle)
+console.log(listVideo.value)
 </script>
+
 <template>
-  <div class="wrapper">
-    <div class="">
+  <main>
+    <Header />
+    <PlaylistsComponent />
+    <Aside @exportJson="exportToJson" />
+    <div class="wrapper">
       <div class="">
-        <p>Titre</p>
-        <p>Artiste</p>
-        <p>Durée</p>
-      </div>
-      <div class="container">
-        <p>Résultat de la recherche</p>
-        <div v-for="video in listVideo" :key="video.id" class="video-wrapper">
-          <label>
-            <input type="submit" value="video.id" v-model="selectedFilter" />
-            <iframe
-              v-for="video in filteredVideos"
-              :key="video.id"
-              :src="video.url"
-              frameborder="0"
-            />
-          </label>
+        <div class="">
+          <p>Titre</p>
+          <p>{{ trackTitle }}</p>
+          <p>Artiste</p>
+          <p>{{ trackTitle }}</p>
+          <p>Durée</p>
+        </div>
+        <div class="container">
+          <p>Résultat de la recherche</p>
+          <div v-for="video in listVideo" :key="video.id.videoId" class="video-wrapper">
+            <label>
+              <p>{{ video.snippet.title }}</p>
+              <div class="thumbnail">
+                <img :src="video.snippet.thumbnails.medium.url" alt="thumbnail" />
+              </div>
+              <input type="submit" value="video.id.videoId" v-model="selectedFilter" />
+            </label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+    <div>
+      <h1>Vidéo pour {{ trackTitle }}</h1>
+    </div>
+  </main>
 </template>
 
 <style>
@@ -63,7 +67,7 @@ console.log(trackTitle)
   .about {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: center.;
   }
 }
 </style>
