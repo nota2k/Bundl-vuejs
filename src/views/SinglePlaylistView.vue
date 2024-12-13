@@ -13,6 +13,8 @@ const route = useRoute()
 let tracksInplaylists = ref([])
 let loading = ref(true)
 let id = route.params.id
+let playlistName = ref('')
+
 // console.log(route.params.id)
 const fetchPlaylistDetails = (id) => {
   axios
@@ -67,6 +69,10 @@ watch(
     }
   }
 )
+
+const handlePlaylistName = (name) => {
+  playlistName.value = name
+}
 </script>
 
 <template>
@@ -77,7 +83,7 @@ watch(
     <div v-if="loading">Chargement...</div>
     <div v-else>
       <div class="container">
-        <h2>{{ PlaylistsComponent.name }}</h2>
+        <h2>{{ playlistName }}</h2>
         <table class="">
           <thead class="">
             <tr>

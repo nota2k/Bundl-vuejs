@@ -3,13 +3,14 @@ import { ref, onMounted, defineEmits, defineProps } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 
-const emit = defineEmits(['getPlaylistId'])
+const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
 
 let playlists = ref([])
 let loading = ref(true)
 
 const emitPlaylist = (id) => {
   emit('getPlaylistId', id)
+  emit('getPlaylistName', name)
 }
 
 onMounted(() => {
@@ -41,7 +42,7 @@ onMounted(() => {
           <li v-for="detail in playlists" :key="detail.id">
             <router-link
               :to="{ name: 'playlist', params: { id: detail.id } }"
-              @click="emitPlaylist(detail.id)"
+              @click="emitPlaylist(detail.id, detail.name)"
               >{{ detail.name }}
             </router-link>
           </li>

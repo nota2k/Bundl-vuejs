@@ -30,14 +30,20 @@ onMounted(() => {
 const emitTrackTitle = (title) => {
   emit('getTrackTitle', title)
 }
+
+let selectedPlaylistName = ref('')
+
+const handlePlaylistName = (name) => {
+  selectedPlaylistName.value = name
+}
 </script>
 
 <template>
   <main>
     <Header />
-    <PlaylistsComponent />
+    <PlaylistsComponent @getPlaylistName="handlePlaylistName" />
     <Aside />
-    <AllTracksComponent />
+    <AllTracksComponent :playlistName="selectedPlaylistName" />
   </main>
 </template>
 <style scope>
