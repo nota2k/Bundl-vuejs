@@ -1,41 +1,56 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount, defineEmits, defineProps } from 'vue'
+import { ref, onMounted, defineEmits, defineProps, watch } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import Header from '@/components/Header.vue'
-import Aside from '@/components/Aside.vue'
-import PlaylistsComponent from '@/components/PlaylistsComponent.vue'
+import
 
 const route = useRoute()
 
-const emit = defineEmits(['getTrackTitle'])
-
-let trackList = ref([])
+let tracksInplaylists = ref([])
 let loading = ref(true)
-
-onMounted(() => {
+let id = route.params.id
+// console.log(route.params.id)
+const fetchPlaylistDetails = (id) => {
   axios
-    .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
+    .get(
+      `https://pantagruweb.club/tentacules/webhook/b469b78f-40ba-437a-937d-48ba00985774?id=${id}`,
+      { timeout: 10000 }
+    )
     .then((response) => {
       console.log(response.data)
-      trackList.value = response.data
+      tracksInplaylists.value = response.data
+      // console.log(playlists)
+    })
+    .catch((error) => {
+      console.error('Erreur lors de la récupération des détails de la playlist:', error.message)
     })
     .finally(() => {
       loading.value = false
     })
+}
+
+onMounted(() => {
+  if (route.params.id) {
+    fetchPlaylistDetails(route.params.id)
+  } else {
+    console.error('ID de la playlist non fourni')
+  }
 })
 
-const emitTrackTitle = (title) => {
-  emit('getTrackTitle', title)
-}
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (newId) {
+      loading.value = true
+      fetchPlaylistDetails(newId)
+    }
+  }
+)
 </script>
 
 <template>
   <main>
-    <Header />
-    <PlaylistsComponent />
-    <Aside />
     <div v-if="loading">Chargement...</div>
     <div v-else>
       <div class="container">
@@ -44,12 +59,15 @@ const emitTrackTitle = (title) => {
             <tr>
               <th class="">
                 <span>Artiste</span>
+                <MoveDown :size="15" />
               </th>
               <th class="">
                 <span>Album</span>
+                <MoveDown :size="15" />
               </th>
               <th class="">
                 <span>Titre</span>
+                <MoveDown :size="15" />
               </th>
               <th class=""><span>Ajouté le</span></th>
               <th class=""><span> </span></th>
@@ -57,7 +75,7 @@ const emitTrackTitle = (title) => {
           </thead>
 
           <tbody>
-            <tr v-for="detail in trackList" :key="detail.id">
+            <tr v-for="detail in tracksInplaylists" :key="detail.id">
               <th>
                 {{ detail.track.artist }}
               </th>

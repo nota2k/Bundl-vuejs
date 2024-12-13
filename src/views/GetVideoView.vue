@@ -1,25 +1,31 @@
 <script setup>
 import axios from 'axios'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 
 let listVideo = ref([])
 
+const props = defineProps({
+  trackTitle: String
+})
+
 onMounted(() => {
   axios
-    .get('https://pantagruweb.club/tentacules/webhook-test/b469b78f-40ba-437a-937d-48ba00985774')
+    .get('https://pantagruweb.club/tentacules/webhook/49296f58-136d-4a67-a320-f16e9da7ba33')
     .then((response) => {
       console.log(response.data)
       listVideo.value = response.data
     })
 })
-console.log(listVideo)
+// console.log(listVideo)
 const filteredVideos = computed(() => {
   if (selectedFilter.value === 'all') {
     return listVideo.value
   }
   return listVideo.value.filter((video) => video.category === selectedFilter.value)
 })
+
+console.log(trackTitle)
 </script>
 <template>
   <div class="wrapper">
