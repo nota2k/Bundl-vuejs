@@ -45,7 +45,6 @@ const goToVideoView = () => {
           }
         }"
         class="yt"
-        @click="getInfoTrack"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

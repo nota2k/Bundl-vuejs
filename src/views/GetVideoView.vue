@@ -13,20 +13,30 @@ const trackTitle = decodeURIComponent(route.params.title)
 const trackArtist = decodeURIComponent(route.params.artist)
 const selectedFilter = ref([])
 let loading = ref(true)
+let selectedPlaylistId = ref(null)
 
 onMounted(() => {
   axios
     .get(
-      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
+      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
     )
     .then((response) => {
-      console.log(response.data)
-      listVideo.value = response.data
+      console.log(response.data[0].items)
+      listVideo.value = response.data[0].items
     })
     .finally(() => {
       loading.value = false
     })
 })
+const handlePlaylistId = (id) => {
+  selectedPlaylistId.value = id
+}
+
+let selectedPlaylistName = ref('')
+
+const handlePlaylistName = (name) => {
+  selectedPlaylistName.value = name
+}
 </script>
 
 <template>
@@ -46,10 +56,10 @@ onMounted(() => {
           <p>Résultat de la recherche</p>
           <div v-for="video in listVideo" class="video-wrapper">
             <label>
-              <p>{{ video }}</p>
+              <p>{{ video.snippet.title }}</p>
               <div class="thumbnail">
                 <iframe
-                  :src="`https://www.youtube.com/embed/${video.id.videoId}`"
+                  :src="`https://www.youtube.com/embed/${video.etag}`"
                   width="560"
                   height="315"
                   title="YouTube video player"
