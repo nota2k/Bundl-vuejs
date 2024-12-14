@@ -69,7 +69,7 @@ const handleSelection = () => {
               <p>{{ video.snippet.title }}</p>
               <div class="thumbnail">
                 <iframe
-                  :src="`https://www.youtube.com/embed/${video.id.videoId}`"
+                  :src="`https://www.youtube.com/embed/${video.etag}`"
                   width="560"
                   height="315"
                   title="YouTube video player"
@@ -88,15 +88,9 @@ const handleSelection = () => {
           </div>
         </div>
       </div>
-      <router-link
-        :to="{
-          name: 'addvideo',
-          params: {}
-        }"
-        class="next"
-      >
+      <button @click="handleSelection" class="next">
         Suivant<img class="griffes" src="../assets/griffes.svg" />
-      </router-link>
+      </button>
     </div>
   </main>
 </template>
