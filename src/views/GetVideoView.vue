@@ -9,14 +9,15 @@ import PlaylistList from '@/components/playlists/PlaylistList.vue'
 let listVideo = ref([])
 
 const route = useRoute()
-const trackTitle = route.params.title
+const trackTitle = decodeURIComponent(route.params.title)
+const trackArtist = decodeURIComponent(route.params.artist)
 const selectedFilter = ref([])
 let loading = ref(true)
 
 onMounted(() => {
   axios
     .get(
-      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&?title=${trackTitle}`
+      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
     )
     .then((response) => {
       console.log(response.data)
@@ -38,11 +39,8 @@ onMounted(() => {
         <h1>Vidéo pour {{ trackTitle }}</h1>
 
         <div class="">
-          <p>Titre</p>
-          <p>{{ trackTitle }}</p>
-          <p>Artiste</p>
-          <p>{{ trackTitle }}</p>
-          <p>Durée</p>
+          <p><strong>Titre : </strong>{{ trackTitle }}</p>
+          <p><strong>Artiste : </strong>{{ trackArtist }}</p>
         </div>
         <div class="container">
           <p>Résultat de la recherche</p>

@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, defineEmits, defineProps } from 'vue'
-import axios from 'axios'
+import { ref, onMounted, onBeforeMount, defineProps } from 'vue'
 import router from '@/router'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
   title: String,
@@ -11,9 +10,15 @@ const props = defineProps({
   added_at: String
 })
 
-// const emit = defineEmits({
-//   e['getInfoTrack']}
-// )
+const goToVideoView = () => {
+  router.push({
+    name: 'GetVideoView',
+    params: {
+      title: encodeURIComponent(props.title),
+      artist: encodeURIComponent(props.artist)
+    }
+  })
+}
 </script>
 
 <template>
@@ -30,9 +35,15 @@ const props = defineProps({
     <td class="added">
       {{ props.added_at }}
     </td>
-    <td class="to-youtube">
+    <td class="to-youtube" @click="goToVideoView">
       <router-link
-        :to="{ name: 'getvideo', params: { title: props.title } }"
+        :to="{
+          name: 'getvideo',
+          params: {
+            title: encodeURIComponent(props.title),
+            artist: encodeURIComponent(props.artist)
+          }
+        }"
         class="yt"
         @click="getInfoTrack"
       >
