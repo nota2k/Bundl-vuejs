@@ -39,8 +39,8 @@ watch(
 </script>
 
 <template>
-  <!-- <div v-if="loading">Chargement...</div> -->
-  <div class="tracklist-wrapper">
+  <div v-if="loading">Chargement...</div>
+  <div class="tracklist-wrapper" v-else>
     <div class="container">
       <table class="">
         <thead class="">
