@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useRoute } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
-import PlaylistsComponent from '@/components/PlaylistsComponent.vue'
+import PlaylistList from '@/components/playlists/PlaylistList.vue'
 
 let listVideo = ref([])
 

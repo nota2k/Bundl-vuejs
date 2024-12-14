@@ -3,10 +3,10 @@ import { ref, onMounted, onBeforeMount, defineEmits, defineProps } from 'vue'
 import axios from 'axios'
 import router from '@/router'
 import { useRoute } from 'vue-router'
-import Header from '@/components/Header.vue'
-import Aside from '@/components/Aside.vue'
-import PlaylistsComponent from '@/components/PlaylistsComponent.vue'
-import AllTracksComponent from '@/components/AllTracksComponent.vue'
+import Header from '../components/Header.vue'
+import Aside from '../components/Aside.vue'
+import PlaylistList from '../components/playlists/PlaylistList.vue'
+import PlaylistTracklist from '../components/playlists/PlaylistTracklist.vue'
 
 const route = useRoute()
 
@@ -14,6 +14,7 @@ const emit = defineEmits(['getTrackTitle'])
 
 let trackList = ref([])
 let loading = ref(true)
+let selectedPlaylistId = ref(null)
 
 onMounted(() => {
   axios
@@ -27,8 +28,8 @@ onMounted(() => {
     })
 })
 
-const emitTrackTitle = (title) => {
-  emit('getTrackTitle', title)
+const handlePlaylistId = (id) => {
+  selectedPlaylistId.value = id
 }
 
 let selectedPlaylistName = ref('')
@@ -36,14 +37,20 @@ let selectedPlaylistName = ref('')
 const handlePlaylistName = (name) => {
   selectedPlaylistName.value = name
 }
+
+console.log(handlePlaylistId.value)
 </script>
 
 <template>
   <main>
     <Header />
-    <PlaylistsComponent @getPlaylistName="handlePlaylistName" />
+    <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
     <Aside />
-    <AllTracksComponent :playlistName="selectedPlaylistName" />
+    <PlaylistTracklist
+      :playlistName="selectedPlaylistName"
+      :loading="loading.value"
+      :id="selectedPlaylistId"
+    />
   </main>
 </template>
 <style scope>

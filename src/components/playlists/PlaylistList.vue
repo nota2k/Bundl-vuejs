@@ -2,13 +2,14 @@
 import { ref, onMounted, defineEmits, defineProps } from 'vue'
 import axios from 'axios'
 import router from '@/router'
+import PlaylistListItem from './PlaylistListItem.vue'
 
 const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
 
 let playlists = ref([])
 let loading = ref(true)
 
-const emitPlaylist = (id) => {
+const emitPlaylist = (id, name) => {
   emit('getPlaylistId', id)
   emit('getPlaylistName', name)
 }
@@ -39,13 +40,14 @@ onMounted(() => {
         <button class="close" @click="$emit('close')">Fermer</button>
         <h2>Playlists Spawtify</h2>
         <ul>
-          <li v-for="detail in playlists" :key="detail.id">
-            <router-link
-              :to="{ name: 'playlist', params: { id: detail.id } }"
-              @click="emitPlaylist(detail.id, detail.name)"
-              >{{ detail.name }}
-            </router-link>
-          </li>
+          <PlaylistListItem
+            v-for="playlist in playlists"
+            :key="playlist.id"
+            :playlist="playlist.value"
+            :name="playlist.name"
+            :id="playlist.id"
+            @click="emitPlaylist(playlist.id, playlist.name)"
+          />
         </ul>
       </div>
     </div>
