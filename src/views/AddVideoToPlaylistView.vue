@@ -136,7 +136,38 @@ const handleSelection = () => {
     top: 0;
     left: 0;
     border: 2px solid black;
+    background: #fff;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  input[type='radio']:checked {
     background: var(--yellow);
+    color: red;
+  }
+
+  input[type='radio']:checked::before {
+    content: '';
+    display: flex;
+    height: 2px;
+    width: 30px;
+    background-color: black;
+    position: absolute;
+    left: -2px;
+    top: 12px;
+    rotate: 45deg;
+  }
+
+  input[type='radio']:checked::after {
+    content: '';
+    display: flex;
+    height: 2px;
+    width: 30px;
+    background-color: black;
+    position: absolute;
+    right: -2px;
+    top: 12px;
+    rotate: -45deg;
   }
 }
 
