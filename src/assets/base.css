@@ -22,9 +22,9 @@ main {
   }
 }
 
-.container {
+/* .container {
   border: 2px solid black;
-}
+} */
 
 :root {
   --yellow: #ffe13f;

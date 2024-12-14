@@ -56,6 +56,10 @@ const handlePlaylistName = (name) => {
   margin: 0 auto;
 }
 
+.tracklist-wrapper {
+  border: 2px solid black;
+}
+
 table {
   margin: 0 auto;
   background-color: white;

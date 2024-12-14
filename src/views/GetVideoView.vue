@@ -45,8 +45,11 @@ const handlePlaylistName = (name) => {
     <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
     <Aside />
     <div class="wrapper">
+      <button class="back" @click="$router.go(-1)">Retour</button>
       <div class="">
-        <h1>Vidéo pour {{ trackTitle }}</h1>
+        <h1>
+          Vidéo pour <span class="italic">{{ trackTitle }}</span>
+        </h1>
 
         <div class="">
           <p><strong>Titre : </strong>{{ trackTitle }}</p>
@@ -54,8 +57,8 @@ const handlePlaylistName = (name) => {
         </div>
         <div class="container">
           <p>Résultat de la recherche</p>
-          <div v-for="video in listVideo" class="video-wrapper">
-            <label>
+          <div class="list-video">
+            <div v-for="video in listVideo" class="video-wrapper">
               <p>{{ video.snippet.title }}</p>
               <div class="thumbnail">
                 <iframe
@@ -67,9 +70,14 @@ const handlePlaylistName = (name) => {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
                 ></iframe>
+                <input
+                  class="choose-video"
+                  type="radio"
+                  :value="video.id.videoId"
+                  v-model="selectedFilter"
+                />
               </div>
-              <input type="submit" value="video.id.videoId" v-model="selectedFilter" />
-            </label>
+            </div>
           </div>
         </div>
       </div>
@@ -80,15 +88,74 @@ const handlePlaylistName = (name) => {
 
 <style>
 @media (min-width: 1024px) {
+  .italic {
+    font-style: italic;
+  }
+
   .wrapper {
     background-color: white;
     padding: 3em;
     border-radius: 10px;
+    border: 2px solid black;
   }
+
   .about {
     min-height: 100vh;
     display: flex;
     align-items: center.;
   }
+
+  .list-video {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+
+  .video-wrapper {
+    flex-grow: 2;
+  }
+
+  .thumbnail {
+    position: relative;
+  }
+
+  .choose-video {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    border: 2px solid black;
+    background: var(--yellow);
+  }
+}
+
+.back {
+  padding: 5px 20px;
+  margin-bottom: 1em;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out all;
+}
+
+.back::before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #000;
+}
+
+.back:hover {
+  background-color: black;
+  color: #fff;
+}
+
+.back:hover::before {
+  border-right-color: #fff;
 }
 </style>
