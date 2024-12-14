@@ -15,7 +15,6 @@ const props = defineProps({
 function emitPlaylist(id, name) {
   emit('getPlaylistId', id)
   emit('getPlaylistName', name)
-  console.log(id, name)
 }
 </script>
 

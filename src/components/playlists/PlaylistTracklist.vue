@@ -4,7 +4,8 @@ import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
 import axios from 'axios'
 
 const props = defineProps({
-  id: String
+  id: String,
+  playlistName: String
 })
 
 let tracks = ref([])
@@ -21,7 +22,6 @@ const fetchTracks = async (id) => {
       }
     )
     tracks.value = response.data
-    console.log(tracks.value)
   } catch (error) {
     console.error('Erreur lors de la récupération des pistes:', error.message)
   } finally {
@@ -39,9 +39,10 @@ watch(
 </script>
 
 <template>
-  <div v-if="loading">Chargement...</div>
-  <div class="tracklist-wrapper" v-else>
+  <!-- <div v-if="loading">Chargement...</div> -->
+  <div class="tracklist-wrapper">
     <div class="container">
+      <h2 class="playlist-name">{{ props.playlistName }}</h2>
       <table class="">
         <thead class="">
           <tr>
@@ -78,6 +79,13 @@ watch(
 <style scope>
 .container {
   margin: 0 auto;
+}
+
+.playlist-name {
+  padding: 26px;
+  background-color: var(--yellow);
+  margin: 0;
+  border-bottom: 2px solid black;
 }
 
 .tracklist-wrapper {

@@ -10,6 +10,10 @@ const props = defineProps({
   album: String,
   added_at: String
 })
+
+// const emit = defineEmits({
+//   e['getInfoTrack']}
+// )
 </script>
 
 <template>
@@ -17,9 +21,9 @@ const props = defineProps({
     <td class="title">
       {{ props.title }}
     </td>
-    <th>
+    <td class="artist">
       {{ props.artist }}
-    </th>
+    </td>
     <td class="album">
       {{ props.album }}
     </td>
@@ -27,7 +31,11 @@ const props = defineProps({
       {{ props.added_at }}
     </td>
     <td class="to-youtube">
-      <!-- <router-link :to="{ name: 'getvideo', params: { title: props.title } }" class="yt">
+      <router-link
+        :to="{ name: 'getvideo', params: { title: props.title } }"
+        class="yt"
+        @click="getInfoTrack"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -45,7 +53,7 @@ const props = defineProps({
           />
           <path d="m10 15 5-3-5-3z" />
         </svg>
-      </router-link> -->
+      </router-link>
     </td>
   </tr>
 </template>

@@ -20,7 +20,7 @@ onMounted(() => {
   axios
     .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
     .then((response) => {
-      console.log(response.data)
+      // console.log(response.data)
       trackList.value = response.data
     })
     .finally(() => {
@@ -37,8 +37,6 @@ let selectedPlaylistName = ref('')
 const handlePlaylistName = (name) => {
   selectedPlaylistName.value = name
 }
-
-console.log(handlePlaylistId.value)
 </script>
 
 <template>

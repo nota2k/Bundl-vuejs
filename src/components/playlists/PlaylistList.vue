@@ -20,7 +20,7 @@ onMounted(() => {
       timeout: 10000
     }) // Augmentez le délai d'attente à 10 secondes
     .then((response) => {
-      console.log(response.data)
+      // console.log(response.data)
       playlists.value = response.data
     })
     .catch((error) => {

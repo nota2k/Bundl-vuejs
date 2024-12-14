@@ -11,25 +11,32 @@ let listVideo = ref([])
 const route = useRoute()
 const trackTitle = route.params.title
 const selectedFilter = ref([])
+let loading = ref(true)
+
 onMounted(() => {
   axios
-    .get(`https://pantagruweb.club/tentacules/webhook/searchvideos?title=${trackTitle}`)
+    .get(
+      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&?title=${trackTitle}`
+    )
     .then((response) => {
       console.log(response.data)
       listVideo.value = response.data
     })
+    .finally(() => {
+      loading.value = false
+    })
 })
-
-console.log(listVideo.value)
 </script>
 
 <template>
   <main>
     <Header />
-    <PlaylistsComponent />
-    <Aside @exportJson="exportToJson" />
+    <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
+    <Aside />
     <div class="wrapper">
       <div class="">
+        <h1>Vidéo pour {{ trackTitle }}</h1>
+
         <div class="">
           <p>Titre</p>
           <p>{{ trackTitle }}</p>
@@ -39,11 +46,19 @@ console.log(listVideo.value)
         </div>
         <div class="container">
           <p>Résultat de la recherche</p>
-          <div v-for="video in listVideo" :key="video.id.videoId" class="video-wrapper">
+          <div v-for="video in listVideo" class="video-wrapper">
             <label>
-              <p>{{ video.snippet.title }}</p>
+              <p>{{ video }}</p>
               <div class="thumbnail">
-                <img :src="video.snippet.thumbnails.medium.url" alt="thumbnail" />
+                <iframe
+                  :src="`https://www.youtube.com/embed/${video.id.videoId}`"
+                  width="560"
+                  height="315"
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
               </div>
               <input type="submit" value="video.id.videoId" v-model="selectedFilter" />
             </label>
@@ -51,9 +66,7 @@ console.log(listVideo.value)
         </div>
       </div>
     </div>
-    <div>
-      <h1>Vidéo pour {{ trackTitle }}</h1>
-    </div>
+    <div></div>
   </main>
 </template>
 
