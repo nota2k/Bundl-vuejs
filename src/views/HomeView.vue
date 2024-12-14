@@ -29,7 +29,11 @@ onMounted(() => {
 })
 
 const handlePlaylistId = (id) => {
-  selectedPlaylistId.value = id
+  if (!id) {
+    id = trackList.value[0].playlist_id
+  } else {
+    selectedPlaylistId.value = id
+  }
 }
 
 let selectedPlaylistName = ref('')

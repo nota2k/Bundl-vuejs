@@ -14,6 +14,20 @@ let isSorted = ref(false)
 let isSortedAsc = ref(true)
 let sortedBy = ref('')
 
+// let trackList = ref([])
+
+onMounted(() => {
+  axios
+    .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
+    .then((response) => {
+      tracks.value = response.data
+    })
+    .finally(() => {
+      loading.value = false
+    })
+})
+console.log(tracks.value)
+
 const fetchTracks = async (id) => {
   if (!id) return
   loading.value = true
@@ -26,7 +40,6 @@ const fetchTracks = async (id) => {
     )
     tracks.value = response.data
     isSorted.value = false
-    // console.log(response.data)
   } catch (error) {
     console.error('Erreur lors de la récupération des pistes:', error.message)
   } finally {
@@ -87,7 +100,9 @@ watch(
   <!-- <div v-if="loading">Chargement...</div> -->
   <div class="tracklist-wrapper">
     <div class="container">
-      <h2 class="playlist-name">{{ props.playlistName }}</h2>
+      <h2 class="playlist-name">
+        {{ props.playlistName ? props.playlistName : 'Tous mes morceaux' }}
+      </h2>
       <table class="">
         <thead class="">
           <tr>
