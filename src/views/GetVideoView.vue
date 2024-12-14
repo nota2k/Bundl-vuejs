@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, defineEmits } from 'vue'
 import axios from 'axios'
 import { useRoute } from 'vue-router'
 import Header from '@/components/Header.vue'
@@ -11,9 +11,11 @@ let listVideo = ref([])
 const route = useRoute()
 const trackTitle = decodeURIComponent(route.params.title)
 const trackArtist = decodeURIComponent(route.params.artist)
-const selectedFilter = ref([])
+const selectedFilter = ref(null)
 let loading = ref(true)
 let selectedPlaylistId = ref(null)
+
+const emit = defineEmits(['getSelection'])
 
 onMounted(() => {
   axios
@@ -28,6 +30,7 @@ onMounted(() => {
       loading.value = false
     })
 })
+
 const handlePlaylistId = (id) => {
   selectedPlaylistId.value = id
 }
@@ -36,6 +39,10 @@ let selectedPlaylistName = ref('')
 
 const handlePlaylistName = (name) => {
   selectedPlaylistName.value = name
+}
+
+const handleSelection = () => {
+  emit('getSelection', selectedFilter.value)
 }
 </script>
 
@@ -46,12 +53,12 @@ const handlePlaylistName = (name) => {
     <Aside />
     <div class="wrapper">
       <button class="back" @click="$router.go(-1)">Retour</button>
-      <div class="">
+      <div class="content">
         <h1>
           Vidéo pour <span class="italic">{{ trackTitle }}</span>
         </h1>
 
-        <div class="">
+        <div class="infos-search">
           <p><strong>Titre : </strong>{{ trackTitle }}</p>
           <p><strong>Artiste : </strong>{{ trackArtist }}</p>
         </div>
@@ -81,8 +88,10 @@ const handlePlaylistName = (name) => {
           </div>
         </div>
       </div>
+      <button @click="handleSelection" class="next">
+        Suivant<img class="griffes" src="../assets/griffes.svg" />
+      </button>
     </div>
-    <div></div>
   </main>
 </template>
 
@@ -157,5 +166,68 @@ const handlePlaylistName = (name) => {
 
 .back:hover::before {
   border-right-color: #fff;
+}
+
+.next {
+  padding: 9px 25px;
+  border: 2px solid black;
+  min-width: 140px;
+  font-size: 1.2em;
+  text-align: left;
+  float: right;
+  cursor: pointer;
+  position: relative;
+}
+
+.next {
+  padding: 9px 25px;
+  border: 2px solid black;
+  min-width: 140px;
+  font-size: 1.2em;
+  text-align: left;
+  float: right;
+  cursor: pointer;
+  position: relative;
+  border-radius: 2px;
+}
+
+.griffes {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: -19px;
+  right: 0;
+}
+
+.griffes::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: white;
+  position: absolute;
+  left: 0;
+}
+
+.next::after {
+  content: '';
+  display: block;
+  max-width: 50px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  position: absolute;
+  left: 64%;
+  top: 0;
+  transition: 0.2s ease-in-out all;
+  transform-origin: left;
+}
+.next:hover {
+  background-color: var(--yellow);
+}
+
+.next:hover::after {
+  width: 0%;
+  background: var(--yellow);
 }
 </style>
