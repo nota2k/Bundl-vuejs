@@ -41,6 +41,16 @@ let selectedPlaylistName = ref('')
 const handlePlaylistName = (name) => {
   selectedPlaylistName.value = name
 }
+
+const handleCache = () => {
+  axios
+    .get('https://pantagruweb.club/tentacules/webhook/babines/liked?cache=false')
+    .then((response) => {
+      trackList = response.data
+
+      console.log(trackList)
+    })
+}
 </script>
 
 <template>
@@ -55,7 +65,7 @@ const handlePlaylistName = (name) => {
         <p>Youtube</p>
       </div>
     </div>
-    <Aside />
+    <Aside @clearCache="handleCache()" />
     <PlaylistTracklist
       :playlistName="selectedPlaylistName"
       :loading="loading.value"

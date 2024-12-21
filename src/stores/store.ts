@@ -6,6 +6,10 @@ export const tracks = reactive({
   artist: ''
 })
 
+export const allTracks = reactive({
+  allTracks: []
+})
+
 export const videos = reactive({
   id: ''
 })
