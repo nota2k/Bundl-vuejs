@@ -2,13 +2,14 @@
 import { ref, onMounted, onBeforeMount, defineEmits, defineProps, watch } from 'vue'
 import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
 import axios from 'axios'
+import { tracks } from '@/stores/store.ts'
 
 const props = defineProps({
   id: String,
   playlistName: String
 })
 
-let tracks = ref([])
+let allTracks = ref([])
 let loading = ref(true)
 let isSorted = ref(false)
 let isSortedAsc = ref(true)
@@ -20,7 +21,7 @@ onMounted(() => {
   axios
     .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
     .then((response) => {
-      tracks.value = response.data
+      allTracks.value = response.data
     })
     .finally(() => {
       loading.value = false
@@ -47,7 +48,7 @@ const fetchTracks = async (id) => {
 }
 
 const sortTracksByArtist = (event) => {
-  tracks.value.sort((a, b) => {
+  allTracks.value.sort((a, b) => {
     if (a.track.artist.toLowerCase() < b.track.artist.toLowerCase())
       return isSortedAsc.value ? -1 : 1
     if (a.track.artist.toLowerCase() > b.track.artist.toLowerCase())
@@ -61,7 +62,7 @@ const sortTracksByArtist = (event) => {
 }
 
 const sortTracksByTitle = (event) => {
-  tracks.value.sort((a, b) => {
+  allTracks.value.sort((a, b) => {
     if (a.track.title.toLowerCase() < b.track.title.toLowerCase()) return isSortedAsc.value ? -1 : 1
     if (a.track.title.toLowerCase() > b.track.title.toLowerCase()) return isSortedAsc.value ? 1 : -1
     return 0
@@ -73,7 +74,7 @@ const sortTracksByTitle = (event) => {
 }
 
 const sortTracksByAdded = (event) => {
-  tracks.value.sort((a, b) => {
+  allTracks.value.sort((a, b) => {
     if (a.track.added_at.toLowerCase() < b.track.added_at.toLowerCase())
       return isSortedAsc.value ? -1 : 1
     if (a.track.added_at.toLowerCase() > b.track.added_at.toLowerCase())
@@ -93,6 +94,12 @@ watch(
   },
   { immediate: true }
 )
+
+function selectedTrack(track) {
+  tracks.id = track.id
+  tracks.title = track.title
+  tracks.artist = track.artist
+}
 </script>
 
 <template>
@@ -135,13 +142,13 @@ watch(
 
         <tbody>
           <PlaylistTracklistItem
-            v-for="track in tracks"
+            v-for="track in allTracks"
             :key="track.track.id"
             :title="track.track.title"
             :artist="track.track.artist"
             :album="track.track.album"
             :added_at="track.track.added_at"
-            @click="emitTrackTitle(track.title)"
+            @click="selectedTrack(track)"
             @emitTrackArtist="getPlaylistId(track.artist)"
           />
         </tbody>

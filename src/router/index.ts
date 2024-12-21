@@ -18,7 +18,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/getvideo/addtoplaylist',
+      path: '/add-video',
       name: 'addvideo',
       component: AddVideoToPlaylistView,
       props: true

@@ -1,22 +1,22 @@
 <script setup>
 import { ref, onMounted, defineProps } from 'vue'
 import axios from 'axios'
-import { useRoute } from 'vue-router'
+import { videos } from '@/stores/store.ts'
 
-const props = defineProps(['video']) // Définir la prop 'video'
-const route = useRoute()
+let videoData = ref([])
 
-let selectedVideo = ref(route.params.videoId)
-let selectedPlaylistId = ref(route.params.playlistId)
+const props = defineProps({
+  video: String
+})
 
 onMounted(() => {
   axios
     .post(
-      `https://pantagruweb.club/tentacules/webhook-test/addvideotoyoutube?part=snippet&id=${selectedPlaylistId}` // Utiliser la prop 'video'
+      `https://pantagruweb.club/tentacules/webhook-test/addvideotoyoutube?part=snippet&id=${videos.id}`
     )
     .then((response) => {
-      //  console.log(response.data)
-      videoData.value = response.data
+      console.log(response.data)
+      // videoData.value = response.data
     })
 })
 </script>

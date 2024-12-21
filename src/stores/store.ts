@@ -1,9 +1,11 @@
 import { reactive } from 'vue'
 
-export const allPlaylists = reactive({
-  playlists: []
+export const tracks = reactive({
+  id: '',
+  title: '',
+  artist: ''
 })
 
-export const allVideos = reactive({
-  videos: []
+export const videos = reactive({
+  id: ''
 })

@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted, computed, defineEmits } from 'vue'
 import axios from 'axios'
-import { useRoute } from 'vue-router' // Ajout de useRouter
+import { useRoute, useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
-import { allVideos } from '@/stores/store'
+import { videos } from '@/stores/store.ts'
 
 let listVideo = ref([])
 
@@ -14,11 +14,11 @@ const trackTitle = decodeURIComponent(route.params.title)
 const trackArtist = decodeURIComponent(route.params.artist)
 
 let loading = ref(true)
-let playlistId = ref('')
-let videoId = ref('') // Ajout de la variable réactive
+let selectedPlaylistId = ref('')
+let selectedVideoId = ref('')
 
 onMounted(() => {
-  const url = `https://pantagruweb.club/tentacules/webhook-test/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
+  const url = `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
 
   axios
     .get(url)
@@ -27,7 +27,7 @@ onMounted(() => {
       listVideo.value = response.data[0].items
     })
     .catch((error) => {
-      // console.error('Error fetching videos:', error.message) // Ajout du message d'erreur
+      console.error('Error fetching videos:', error.message)
     })
     .finally(() => {
       loading.value = false
@@ -35,7 +35,7 @@ onMounted(() => {
 })
 
 const handlePlaylistId = (id) => {
-  playlistId.value = id
+  selectedPlaylistId.value = id
 }
 
 let selectedPlaylistName = ref('')
@@ -46,8 +46,10 @@ const handlePlaylistName = (name) => {
 
 const emit = defineEmits(['change'])
 
-const handleSelection = (id) => {
-  emit('change', id)
+const handleSelection = (videoId) => {
+  videos.id = videoId
+  emit('change', videoId)
+  // console.log(videoId)
 }
 </script>
 
@@ -70,7 +72,7 @@ const handleSelection = (id) => {
         <div class="container">
           <p>Résultat de la recherche</p>
           <div class="list-video">
-            <div v-for="video in listVideo" class="video-wrapper">
+            <div v-for="video in listVideo" :key="video.id.videoId" class="video-wrapper">
               <p>{{ video.snippet.title }}</p>
               <div class="thumbnail">
                 <iframe
@@ -86,7 +88,7 @@ const handleSelection = (id) => {
                   class="choose-video"
                   type="radio"
                   :value="video.id.videoId"
-                  @input="handleSelection"
+                  @input="handleSelection(video.id.videoId)"
                 />
               </div>
             </div>
@@ -95,11 +97,7 @@ const handleSelection = (id) => {
       </div>
       <router-link
         :to="{
-          name: 'addvideo',
-          params: {
-            id: handleSelection,
-            videoId: handlePlaylistId
-          }
+          name: 'addvideo'
         }"
         class="next"
       >

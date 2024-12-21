@@ -6,18 +6,21 @@ import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
 import AddVideoToPlaylist from '@/components/youtube/AddVideoToPlaylist.vue'
-
-let video = ref([])
+import { videos } from '@/stores/store.ts'
 
 const route = useRoute()
-const videoId = ref(route.params.videoId) // Correction de la déclaration
-const playlistId = ref([])
+const selectedVideoId = ref(route.params.videoId)
+const playlistsYT = ref([])
 
 onMounted(() => {
-  axios.get(`https://pantagruweb.club/tentacules/webhook/youtubeplaylists`).then((response) => {
-    // console.log(response.data)
-    playlistsYT.value = response.data
-  })
+  axios
+    .post(
+      `https://pantagruweb.club/tentacules/webhook/addvideotoyoutube?part=snippet&id=${videos.id}`
+    )
+    .then((response) => {
+      console.log(response.data)
+      videoData.value = response.data
+    })
 })
 </script>
 
@@ -26,8 +29,7 @@ onMounted(() => {
     <Header />
     <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
     <Aside />
-    <AddVideoToPlaylist :video="videoId" @change="playlistId" />
-    <!-- Passer la valeur de selectedVideoId -->
+    <AddVideoToPlaylist :video="selectedVideoId" @change="playlistsYT" />
   </main>
 </template>
 
