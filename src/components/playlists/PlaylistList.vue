@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, defineEmits, defineProps } from 'vue'
 import axios from 'axios'
-import router from '@/router'
 import PlaylistListItem from './PlaylistListItem.vue'
 
 const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
@@ -24,7 +23,7 @@ onMounted(() => {
       playlists.value = response.data
     })
     .catch((error) => {
-      console.error('Erreur lors de la récupération des playlists:', error.message)
+      // console.error('Erreur lors de la récupération des playlists:', error.message)
     })
     .finally(() => {
       loading.value = false

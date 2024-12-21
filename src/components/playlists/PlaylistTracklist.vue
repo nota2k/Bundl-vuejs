@@ -26,7 +26,6 @@ onMounted(() => {
       loading.value = false
     })
 })
-console.log(tracks.value)
 
 const fetchTracks = async (id) => {
   if (!id) return
@@ -163,15 +162,13 @@ watch(
 }
 
 .tracklist-wrapper {
-  /* border: 2px solid black; */
+  grid-row: 2 / 7;
 }
 
 table {
   margin: 0 auto;
-  background-color: white;
   padding: 2em;
   width: 100%;
-  box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
 }
 

@@ -47,6 +47,14 @@ const handlePlaylistName = (name) => {
   <main>
     <Header />
     <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
+    <div class="youtube-to-spotify">
+      <div class="container flex column">
+        <div class="img-wrapper">
+          <img class="os" src="../assets/os.svg" alt="os" />
+        </div>
+        <p>Youtube</p>
+      </div>
+    </div>
     <Aside />
     <PlaylistTracklist
       :playlistName="selectedPlaylistName"
@@ -60,16 +68,24 @@ const handlePlaylistName = (name) => {
   margin: 0 auto;
 }
 
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex.column {
+  flex-direction: column;
+}
+
 .tracklist-wrapper {
   border: 2px solid black;
 }
 
 table {
   margin: 0 auto;
-  background-color: white;
   padding: 2em;
   width: 100%;
-  box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
 }
 
@@ -99,5 +115,26 @@ button {
   display: inline-flex;
   justify-content: center;
   width: 100%;
+}
+
+.youtube-to-spotify {
+  grid-column-start: 1;
+  grid-row-start: 3;
+  width: 100%;
+  height: 100%;
+  background: var(--yellow);
+  padding: 1em;
+  border: 2px solid black;
+  box-sizing: border-box;
+}
+
+.os {
+  width: 100%;
+  height: 100%;
+}
+
+.img-wrapper {
+  width: -moz-available;
+  max-width: 180px;
 }
 </style>

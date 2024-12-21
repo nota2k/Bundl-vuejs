@@ -1,30 +1,33 @@
 <script setup>
 import { ref, onMounted, computed, defineEmits } from 'vue'
 import axios from 'axios'
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router' // Ajout de useRouter
 import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
+import { allVideos } from '@/stores/store'
 
 let listVideo = ref([])
 
 const route = useRoute()
 const trackTitle = decodeURIComponent(route.params.title)
 const trackArtist = decodeURIComponent(route.params.artist)
-const selectedFilter = ref(null)
-let loading = ref(true)
-let selectedPlaylistId = ref(null)
 
-const emit = defineEmits(['getSelection'])
+let loading = ref(true)
+let playlistId = ref('')
+let videoId = ref('') // Ajout de la variable réactive
 
 onMounted(() => {
+  const url = `https://pantagruweb.club/tentacules/webhook-test/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
+
   axios
-    .get(
-      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
-    )
+    .get(url)
     .then((response) => {
       console.log(response.data[0].items)
       listVideo.value = response.data[0].items
+    })
+    .catch((error) => {
+      // console.error('Error fetching videos:', error.message) // Ajout du message d'erreur
     })
     .finally(() => {
       loading.value = false
@@ -32,7 +35,7 @@ onMounted(() => {
 })
 
 const handlePlaylistId = (id) => {
-  selectedPlaylistId.value = id
+  playlistId.value = id
 }
 
 let selectedPlaylistName = ref('')
@@ -41,8 +44,10 @@ const handlePlaylistName = (name) => {
   selectedPlaylistName.value = name
 }
 
-const handleSelection = () => {
-  emit('getSelection', selectedFilter.value)
+const emit = defineEmits(['change'])
+
+const handleSelection = (id) => {
+  emit('change', id)
 }
 </script>
 
@@ -81,7 +86,7 @@ const handleSelection = () => {
                   class="choose-video"
                   type="radio"
                   :value="video.id.videoId"
-                  v-model="selectedFilter"
+                  @input="handleSelection"
                 />
               </div>
             </div>
@@ -91,7 +96,10 @@ const handleSelection = () => {
       <router-link
         :to="{
           name: 'addvideo',
-          params: {}
+          params: {
+            id: handleSelection,
+            videoId: handlePlaylistId
+          }
         }"
         class="next"
       >

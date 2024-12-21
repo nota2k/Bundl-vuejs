@@ -1,49 +1,24 @@
 <script setup>
-import { ref, onMounted, computed, defineEmits } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import axios from 'axios'
 import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
+import AddVideoToPlaylist from '@/components/youtube/AddVideoToPlaylist.vue'
 
-let listVideo = ref([])
+let video = ref([])
 
 const route = useRoute()
-const trackTitle = decodeURIComponent(route.params.title)
-const trackArtist = decodeURIComponent(route.params.artist)
-const selectedFilter = ref(null)
-let loading = ref(true)
-let selectedPlaylistId = ref(null)
-
-const emit = defineEmits(['getSelection'])
+const videoId = ref(route.params.videoId) // Correction de la déclaration
+const playlistId = ref([])
 
 onMounted(() => {
-  axios
-    .get(
-      `https://pantagruweb.club/tentacules/webhook/searchvideos?part=snippet&maxResults=5&type=video&q=${encodeURIComponent(trackTitle + ' ' + trackArtist)}`
-    )
-    .then((response) => {
-      console.log(response.data[0].items)
-      listVideo.value = response.data[0].items
-    })
-    .finally(() => {
-      loading.value = false
-    })
+  axios.get(`https://pantagruweb.club/tentacules/webhook/youtubeplaylists`).then((response) => {
+    // console.log(response.data)
+    playlistsYT.value = response.data
+  })
 })
-
-const handlePlaylistId = (id) => {
-  selectedPlaylistId.value = id
-}
-
-let selectedPlaylistName = ref('')
-
-const handlePlaylistName = (name) => {
-  selectedPlaylistName.value = name
-}
-
-const handleSelection = () => {
-  emit('getSelection', selectedFilter.value)
-}
 </script>
 
 <template>
@@ -51,47 +26,8 @@ const handleSelection = () => {
     <Header />
     <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
     <Aside />
-    <div class="wrapper">
-      <button class="back" @click="$router.go(-1)">Retour</button>
-      <div class="content">
-        <h1>
-          Vidéo pour <span class="italic">{{ trackTitle }}</span>
-        </h1>
-
-        <div class="infos-search">
-          <p><strong>Titre : </strong>{{ trackTitle }}</p>
-          <p><strong>Artiste : </strong>{{ trackArtist }}</p>
-        </div>
-        <div class="container">
-          <p>Résultat de la recherche</p>
-          <div class="list-video">
-            <div v-for="video in listVideo" class="video-wrapper">
-              <p>{{ video.snippet.title }}</p>
-              <div class="thumbnail">
-                <iframe
-                  :src="`https://www.youtube.com/embed/${video.etag}`"
-                  width="560"
-                  height="315"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
-                <input
-                  class="choose-video"
-                  type="radio"
-                  :value="video.id.videoId"
-                  v-model="selectedFilter"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button @click="handleSelection" class="next">
-        Suivant<img class="griffes" src="../assets/griffes.svg" />
-      </button>
-    </div>
+    <AddVideoToPlaylist :video="videoId" @change="playlistId" />
+    <!-- Passer la valeur de selectedVideoId -->
   </main>
 </template>
 

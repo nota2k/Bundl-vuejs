@@ -58,7 +58,7 @@ function emitPlaylist(id, name) {
   flex-direction: column;
   align-items: center;
   border: 2px solid black;
-  max-height: 60vh;
+  max-height: 70vh;
   position: relative;
 }
 

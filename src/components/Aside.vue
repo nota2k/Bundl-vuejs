@@ -35,7 +35,7 @@ const emit = defineEmits(['exportJson'])
 <style scoped>
 aside {
   grid-column-start: 3;
-  grid-row-start: 2;
+  grid-row: 2 / 3;
   position: sticky;
   top: 5%;
   align-self: start;

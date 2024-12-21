@@ -79,10 +79,8 @@ const goToVideoView = () => {
 
 table {
   margin: 0 auto;
-  background-color: white;
   padding: 2em;
   width: 100%;
-  box-shadow: 3px 0px 8px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
 }
 
