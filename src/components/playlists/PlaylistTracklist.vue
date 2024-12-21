@@ -2,14 +2,14 @@
 import { ref, onMounted, onBeforeMount, defineEmits, defineProps, watch } from 'vue'
 import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
 import axios from 'axios'
-import { tracks } from '@/stores/store.ts'
+import { videos } from '@/stores/store.ts'
 
 const props = defineProps({
   id: String,
   playlistName: String
 })
 
-let allTracks = ref([])
+let tracks = ref([])
 let loading = ref(true)
 let isSorted = ref(false)
 let isSortedAsc = ref(true)
@@ -21,7 +21,7 @@ onMounted(() => {
   axios
     .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
     .then((response) => {
-      allTracks.value = response.data
+      tracks.value = response.data
     })
     .finally(() => {
       loading.value = false
@@ -48,7 +48,7 @@ const fetchTracks = async (id) => {
 }
 
 const sortTracksByArtist = (event) => {
-  allTracks.value.sort((a, b) => {
+  tracks.value.sort((a, b) => {
     if (a.track.artist.toLowerCase() < b.track.artist.toLowerCase())
       return isSortedAsc.value ? -1 : 1
     if (a.track.artist.toLowerCase() > b.track.artist.toLowerCase())
@@ -62,7 +62,7 @@ const sortTracksByArtist = (event) => {
 }
 
 const sortTracksByTitle = (event) => {
-  allTracks.value.sort((a, b) => {
+  tracks.value.sort((a, b) => {
     if (a.track.title.toLowerCase() < b.track.title.toLowerCase()) return isSortedAsc.value ? -1 : 1
     if (a.track.title.toLowerCase() > b.track.title.toLowerCase()) return isSortedAsc.value ? 1 : -1
     return 0
@@ -74,7 +74,7 @@ const sortTracksByTitle = (event) => {
 }
 
 const sortTracksByAdded = (event) => {
-  allTracks.value.sort((a, b) => {
+  tracks.value.sort((a, b) => {
     if (a.track.added_at.toLowerCase() < b.track.added_at.toLowerCase())
       return isSortedAsc.value ? -1 : 1
     if (a.track.added_at.toLowerCase() > b.track.added_at.toLowerCase())
@@ -94,12 +94,6 @@ watch(
   },
   { immediate: true }
 )
-
-function selectedTrack(track) {
-  tracks.id = track.id
-  tracks.title = track.title
-  tracks.artist = track.artist
-}
 </script>
 
 <template>
@@ -142,13 +136,13 @@ function selectedTrack(track) {
 
         <tbody>
           <PlaylistTracklistItem
-            v-for="track in allTracks"
+            v-for="track in tracks"
             :key="track.track.id"
             :title="track.track.title"
             :artist="track.track.artist"
             :album="track.track.album"
             :added_at="track.track.added_at"
-            @click="selectedTrack(track)"
+            @click="emitTrackTitle(track.title)"
             @emitTrackArtist="getPlaylistId(track.artist)"
           />
         </tbody>
