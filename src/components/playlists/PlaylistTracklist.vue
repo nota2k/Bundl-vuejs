@@ -2,7 +2,9 @@
 import { ref, onMounted, onBeforeMount, defineEmits, defineProps, watch } from 'vue'
 import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
 import axios from 'axios'
+import addTrackManually from '../addTrackManually.vue'
 import { videos } from '@/stores/store.ts'
+import AddTrackManually from '../addTrackManually.vue'
 
 const props = defineProps({
   id: String,
@@ -100,6 +102,7 @@ watch(
   <!-- <div v-if="loading">Chargement...</div> -->
   <div class="tracklist-wrapper">
     <div class="container">
+      <AddTrackManually />
       <h2 class="playlist-name">
         {{ props.playlistName ? props.playlistName : 'Tous mes morceaux' }}
       </h2>
