@@ -5,7 +5,6 @@ import { useRoute, useRouter } from 'vue-router'
 import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
-import { videos } from '@/stores/store.ts'
 
 let listVideo = ref([])
 

@@ -1,15 +1,9 @@
 <script setup>
-import { ref, onMounted, onBeforeMount, defineEmits, defineProps, watch } from 'vue'
-import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
-import axios from 'axios'
-import addTrackManually from '../addTrackManually.vue'
-import { videos } from '@/stores/store.ts'
+import { ref, onMounted, defineProps } from 'vue'
 import AddTrackManually from '../addTrackManually.vue'
+import { usePlaylistsStore } from '@/stores/data'
 
-const props = defineProps({
-  id: String,
-  playlistName: String
-})
+const playlistsStore = usePlaylistsStore()
 
 let tracks = ref([])
 let loading = ref(true)
@@ -17,36 +11,18 @@ let isSorted = ref(false)
 let isSortedAsc = ref(true)
 let sortedBy = ref('')
 
-// let trackList = ref([])
-
-onMounted(() => {
-  axios
-    .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
-    .then((response) => {
-      tracks.value = response.data
-    })
-    .finally(() => {
-      loading.value = false
-    })
+const props = defineProps({
+  id: String
 })
 
-const fetchTracks = async (id) => {
-  if (!id) return
-  loading.value = true
-  try {
-    const response = await axios.get(
-      `https://pantagruweb.club/tentacules/webhook/b469b78f-40ba-437a-937d-48ba00985774?id=${id}`,
-      {
-        timeout: 10000
-      }
-    )
-    tracks.value = response.data
-    isSorted.value = false
-  } catch (error) {
-    console.error('Erreur lors de la récupération des pistes:', error.message)
-  } finally {
-    loading.value = false
-  }
+const goToVideoView = () => {
+  router.push({
+    name: 'GetVideoView',
+    params: {
+      title: encodeURIComponent(props.title),
+      artist: encodeURIComponent(props.artist)
+    }
+  })
 }
 
 const sortTracksByArtist = (event) => {
@@ -89,13 +65,10 @@ const sortTracksByAdded = (event) => {
   event.target.setAttribute('data-value', isSortedAsc.value)
 }
 
-watch(
-  () => props.id,
-  (newId) => {
-    fetchTracks(newId)
-  },
-  { immediate: true }
-)
+// onMounted(() => {
+//   playlistsStore.fetchTracksByPlaylist(props.id)
+// })
+console.log(playlistsStore)
 </script>
 
 <template>
@@ -104,7 +77,11 @@ watch(
     <div class="container">
       <AddTrackManually />
       <h2 class="playlist-name">
-        {{ props.playlistName ? props.playlistName : 'Tous mes morceaux' }}
+        {{
+          playlistsStore.currentPlaylist?.name
+            ? playlistsStore.currentPlaylist.name
+            : 'Tous mes morceaux'
+        }}
       </h2>
       <table class="">
         <thead class="">
@@ -138,16 +115,53 @@ watch(
         </thead>
 
         <tbody>
-          <PlaylistTracklistItem
-            v-for="track in tracks"
-            :key="track.track.id"
-            :title="track.track.title"
-            :artist="track.track.artist"
-            :album="track.track.album"
-            :added_at="track.track.added_at"
-            @click="emitTrackTitle(track.title)"
-            @emitTrackArtist="getPlaylistId(track.artist)"
-          />
+          <tr
+            v-for="track in playlistsStore.currentPlaylistId"
+            :key="playlistsStore.currentPlaylistId"
+          >
+            <td class="title">
+              {{ track.track.title }}
+            </td>
+            <td class="artist">
+              {{ track.track.artist }}
+            </td>
+            <td class="album">
+              {{ track.track.album }}
+            </td>
+            <td class="added">
+              {{ track.track.added_at }}
+            </td>
+            <td class="to-youtube" @click="goToVideoView">
+              <router-link
+                :to="{
+                  name: 'getvideo',
+                  params: {
+                    title: encodeURIComponent(props.title),
+                    artist: encodeURIComponent(props.artist)
+                  }
+                }"
+                class="yt"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-youtube"
+                >
+                  <path
+                    d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"
+                  />
+                  <path d="m10 15 5-3-5-3z" />
+                </svg>
+              </router-link>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -217,5 +231,44 @@ button {
 
 .filter img[data-value='true'] {
   transform: rotate(180deg);
+}
+
+.tracklist-wrapper {
+  /* border: 2px solid black; */
+}
+
+table {
+  margin: 0 auto;
+  padding: 2em;
+  width: 100%;
+  border-radius: 5px;
+}
+
+thead tr {
+  text-align: left;
+  font-weight: bold;
+  line-height: 3em;
+}
+
+tbody th {
+  text-align: left;
+  font-weight: normal;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+button {
+  appearance: none;
+  box-shadow: none;
+  background: none;
+  border: none;
+}
+
+.to-youtube {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
 }
 </style>

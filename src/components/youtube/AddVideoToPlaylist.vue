@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, defineProps } from 'vue'
 import axios from 'axios'
-import { videos } from '@/stores/store.ts'
 
 let videoData = ref([])
 
@@ -9,16 +8,16 @@ const props = defineProps({
   video: String
 })
 
-onMounted(() => {
-  axios
-    .post(
-      `https://pantagruweb.club/tentacules/webhook-test/addvideotoyoutube?part=snippet&id=${videos.id}`
-    )
-    .then((response) => {
-      console.log(response.data)
-      // videoData.value = response.data
-    })
-})
+// onMounted(() => {
+//   axios
+//     .post(
+//       `https://pantagruweb.club/tentacules/webhook-test/addvideotoyoutube?part=snippet&id=${videos.id}`
+//     )
+//     .then((response) => {
+//       console.log(response.data)
+//       // videoData.value = response.data
+//     })
+// })
 </script>
 
 <template>

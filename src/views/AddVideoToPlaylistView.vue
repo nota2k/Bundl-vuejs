@@ -6,7 +6,6 @@ import Header from '@/components/Header.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
 import AddVideoToPlaylist from '@/components/youtube/AddVideoToPlaylist.vue'
-import { videos } from '@/stores/store.ts'
 
 const route = useRoute()
 const selectedVideoId = ref(route.params.videoId)

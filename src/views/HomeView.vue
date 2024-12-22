@@ -1,62 +1,31 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount, defineEmits, defineProps } from 'vue'
-import axios from 'axios'
-import router from '@/router'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Header from '../components/Header.vue'
 import Aside from '../components/Aside.vue'
 import PlaylistList from '../components/playlists/PlaylistList.vue'
 import PlaylistTracklist from '../components/playlists/PlaylistTracklist.vue'
+import { usePlaylistsStore } from '../stores/data'
 
-const route = useRoute()
-
-const emit = defineEmits(['getTrackTitle'])
-
-let trackList = ref([])
-let loading = ref(true)
-let selectedPlaylistId = ref(null)
+const playlistsStore = usePlaylistsStore()
 
 onMounted(() => {
-  axios
-    .get('https://pantagruweb.club/tentacules/webhook/babines/liked')
-    .then((response) => {
-      // console.log(response.data)
-      trackList.value = response.data
-    })
-    .finally(() => {
-      loading.value = false
-    })
+  playlistsStore.fetchPlaylists()
 })
 
+// const currentPlaylist = playlistsStore.currentPlaylist
+// console.log(currentPlaylist)
 const handlePlaylistId = (id) => {
-  if (!id) {
-    id = trackList.value[0].playlist_id
-  } else {
-    selectedPlaylistId.value = id
-  }
-}
-
-let selectedPlaylistName = ref('')
-
-const handlePlaylistName = (name) => {
-  selectedPlaylistName.value = name
-}
-
-const handleCache = () => {
-  axios
-    .get('https://pantagruweb.club/tentacules/webhook/babines/liked?cache=false')
-    .then((response) => {
-      trackList = response.data
-
-      console.log(trackList)
-    })
+  playlistsStore.currentPlaylistId = id
+  console.log(playlistsStore.currentPlaylistId)
+  // playlistsStore.fetchTracksByPlaylist(id)
 }
 </script>
 
 <template>
   <main>
     <Header />
-    <PlaylistList @getPlaylistName="handlePlaylistName" @getPlaylistId="handlePlaylistId" />
+    <PlaylistList @getPlaylistId="handlePlaylistId" />
     <div class="youtube-to-spotify">
       <div class="container flex column">
         <div class="img-wrapper">
@@ -65,15 +34,12 @@ const handleCache = () => {
         <p>Youtube</p>
       </div>
     </div>
-    <Aside @clearCache="handleCache()" />
-    <PlaylistTracklist
-      :playlistName="selectedPlaylistName"
-      :loading="loading.value"
-      :id="selectedPlaylistId"
-    />
+    <Aside />
+    <PlaylistTracklist :id="playlistsStore.currentPlaylistId" />
   </main>
 </template>
-<style scope>
+
+<style scoped>
 .container {
   margin: 0 auto;
 }
