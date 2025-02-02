@@ -1,8 +1,5 @@
-<script setup>
-import { ref, onMounted, defineEmits, defineProps } from 'vue'
-import axios from 'axios'
-import router from '@/router'
-import PlaylistTracklist from './PlaylistTracklist.vue'
+<script setup lang="ts">
+import { defineEmits, defineProps } from 'vue'
 
 const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
 
@@ -12,14 +9,14 @@ const props = defineProps({
   name: String
 })
 
-function emitPlaylist(id, name) {
+function emitPlaylist(id: string, name: string) {
   emit('getPlaylistId', id)
   emit('getPlaylistName', name)
 }
 </script>
 
 <template>
-  <li class="playlist-item" @click="emitPlaylist(props.id, props.name)">
+  <li class="playlist-item" @click="emitPlaylist(props.id ?? '', props.name ?? '')">
     {{ props.name }}
   </li>
 </template>

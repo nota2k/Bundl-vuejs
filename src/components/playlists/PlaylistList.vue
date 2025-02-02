@@ -1,14 +1,20 @@
-<script setup>
-import { ref, onMounted, defineEmits, defineProps } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, defineEmits } from 'vue'
 import axios from 'axios'
 import PlaylistListItem from './PlaylistListItem.vue'
 
-const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
+const emit = defineEmits(['getPlaylistId', 'getPlaylistName', 'close'])
 
-let playlists = ref([])
+interface Playlist {
+  id: string;
+  name: string;
+  value: Record<string, any>;
+}
+
+let playlists = ref<Playlist[]>([])
 let loading = ref(true)
 
-const emitPlaylist = (id, name) => {
+const emitPlaylist = (id: string, name: string) => {
   emit('getPlaylistId', id)
   emit('getPlaylistName', name)
 }

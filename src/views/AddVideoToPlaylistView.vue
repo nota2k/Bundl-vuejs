@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
-import Header from '@/components/Header.vue'
+import Header from '@/components/TheHeader.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
 import AddVideoToPlaylist from '@/components/youtube/AddVideoToPlaylist.vue'

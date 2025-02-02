@@ -1,20 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount, defineEmits, defineProps } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 import axios from 'axios'
-import router from '@/router'
 import { useRoute } from 'vue-router'
-import Header from '../components/Header.vue'
-import Aside from '../components/Aside.vue'
-import PlaylistList from '../components/playlists/PlaylistList.vue'
-import PlaylistTracklist from '../components/playlists/PlaylistTracklist.vue'
+import Header from '@/components/TheHeader.vue'
+import Aside from '@/components/Aside.vue'
+import PlaylistList from '@/components/playlists/PlaylistList.vue'
+import PlaylistTracklist from '@/components/playlists/PlaylistTracklist.vue'
 
 const route = useRoute()
 
 const emit = defineEmits(['getTrackTitle'])
 
-let trackList = ref([])
+interface Track {
+  playlist_id: string;
+  // add other properties if needed
+}
+
+let trackList = ref<Track[]>([])
 let loading = ref(true)
-let selectedPlaylistId = ref(null)
+let selectedPlaylistId = ref<string | undefined>(undefined)
 
 onMounted(() => {
   axios
@@ -28,7 +32,7 @@ onMounted(() => {
     })
 })
 
-const handlePlaylistId = (id) => {
+const handlePlaylistId = (id: string) => {
   if (!id) {
     id = trackList.value[0].playlist_id
   } else {
@@ -38,7 +42,7 @@ const handlePlaylistId = (id) => {
 
 let selectedPlaylistName = ref('')
 
-const handlePlaylistName = (name) => {
+const handlePlaylistName = (name: string) => {
   selectedPlaylistName.value = name
 }
 
@@ -68,7 +72,7 @@ const handleCache = () => {
     <Aside @clearCache="handleCache()" />
     <PlaylistTracklist
       :playlistName="selectedPlaylistName"
-      :loading="loading.value"
+      :loading="loading"
       :id="selectedPlaylistId"
     />
   </main>

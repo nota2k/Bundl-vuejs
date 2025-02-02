@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, computed, defineEmits } from 'vue'
+import { ref, onMounted, defineEmits } from 'vue'
 import axios from 'axios'
-import { useRoute, useRouter } from 'vue-router'
-import Header from '@/components/Header.vue'
+import { useRoute } from 'vue-router'
+import Header from '@/components/TheHeader.vue'
 import Aside from '@/components/Aside.vue'
 import PlaylistList from '@/components/playlists/PlaylistList.vue'
 import { videos } from '@/stores/store.ts'

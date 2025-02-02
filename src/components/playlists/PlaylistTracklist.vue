@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeMount, defineEmits, defineProps, watch } from 'vue'
 import PlaylistTracklistItem from './PlaylistTracklistItem.vue'
 import axios from 'axios'
 import addTrackManually from '../addTrackManually.vue'
-import { videos } from '@/stores/store.ts'
+import { videos } from '@/stores/store'
 import AddTrackManually from '../addTrackManually.vue'
 
 const props = defineProps({
@@ -11,7 +11,17 @@ const props = defineProps({
   playlistName: String
 })
 
-let tracks = ref([])
+interface Track {
+  track: {
+    id: string;
+    title: string;
+    artist: string;
+    album: string;
+    added_at: string;
+  }
+}
+
+let tracks = ref<Track[]>([])
 let loading = ref(true)
 let isSorted = ref(false)
 let isSortedAsc = ref(true)
@@ -30,7 +40,7 @@ onMounted(() => {
     })
 })
 
-const fetchTracks = async (id) => {
+const fetchTracks = async (id: string) => {
   if (!id) return
   loading.value = true
   try {
@@ -43,13 +53,13 @@ const fetchTracks = async (id) => {
     tracks.value = response.data
     isSorted.value = false
   } catch (error) {
-    console.error('Erreur lors de la récupération des pistes:', error.message)
+    console.error('Erreur lors de la récupération des pistes:', (error as any).message)
   } finally {
     loading.value = false
   }
 }
 
-const sortTracksByArtist = (event) => {
+const sortTracksByArtist = (event: Event) => {
   tracks.value.sort((a, b) => {
     if (a.track.artist.toLowerCase() < b.track.artist.toLowerCase())
       return isSortedAsc.value ? -1 : 1
@@ -59,11 +69,16 @@ const sortTracksByArtist = (event) => {
   })
   isSorted.value = true
   isSortedAsc.value = !isSortedAsc.value
-  sortedBy.value = event.target.getAttribute('data-value')
-  event.target.setAttribute('data-value', isSortedAsc.value)
+  if (event.target) {
+    sortedBy.value = (event.target as HTMLElement).getAttribute('data-value') || ''
+    const target = event.target as HTMLElement | null;
+    if (target) {
+      target.setAttribute('data-value', isSortedAsc.value.toString());
+    }
+  }
 }
 
-const sortTracksByTitle = (event) => {
+const sortTracksByTitle = (event: Event) => {
   tracks.value.sort((a, b) => {
     if (a.track.title.toLowerCase() < b.track.title.toLowerCase()) return isSortedAsc.value ? -1 : 1
     if (a.track.title.toLowerCase() > b.track.title.toLowerCase()) return isSortedAsc.value ? 1 : -1
@@ -71,11 +86,11 @@ const sortTracksByTitle = (event) => {
   })
   isSorted.value = true
   isSortedAsc.value = !isSortedAsc.value
-  sortedBy.value = event.target.getAttribute('data-value')
-  event.target.setAttribute('data-value', isSortedAsc.value)
+  sortedBy.value = (event.target as HTMLElement).getAttribute('data-value') || ''
+  ;(event.target as HTMLElement).setAttribute('data-value', isSortedAsc.value.toString())
 }
 
-const sortTracksByAdded = (event) => {
+const sortTracksByAdded = (event: Event) => {
   tracks.value.sort((a, b) => {
     if (a.track.added_at.toLowerCase() < b.track.added_at.toLowerCase())
       return isSortedAsc.value ? -1 : 1
@@ -85,17 +100,30 @@ const sortTracksByAdded = (event) => {
   })
   isSorted.value = true
   isSortedAsc.value = !isSortedAsc.value
-  sortedBy.value = event.target.getAttribute('data-value')
-  event.target.setAttribute('data-value', isSortedAsc.value)
+  const target = event.target as HTMLElement | null;
+  if (target) {
+    sortedBy.value = target.getAttribute('data-value') || '';
+    target.setAttribute('data-value', isSortedAsc.value.toString());
+  }
 }
 
 watch(
   () => props.id,
   (newId) => {
-    fetchTracks(newId)
+    if (newId) {
+      fetchTracks(newId)
+    }
   },
   { immediate: true }
 )
+const getPlaylistId = (artist: string) => {
+  console.log(`Artist: ${artist}`)
+}
+
+const emitTrackTitle = (title: string) => {
+  console.log(`Track Title: ${title}`)
+}
+
 </script>
 
 <template>
@@ -145,8 +173,8 @@ watch(
             :artist="track.track.artist"
             :album="track.track.album"
             :added_at="track.track.added_at"
-            @click="emitTrackTitle(track.title)"
-            @emitTrackArtist="getPlaylistId(track.artist)"
+            @click="emitTrackTitle(track.track.title)"
+            @emitTrackArtist="getPlaylistId(track.track.artist)"
           />
         </tbody>
       </table>
