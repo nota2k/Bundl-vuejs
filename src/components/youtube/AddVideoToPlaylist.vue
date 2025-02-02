@@ -46,7 +46,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <button class="next">Suivant<img class="griffes" src="../assets/griffes.svg" /></button>
+    <button class="next">Suivant<img class="griffes" src="../../assets/griffes.svg" /></button>
   </div>
 </template>
 
