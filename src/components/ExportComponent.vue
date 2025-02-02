@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted, defineEmits, defineProps } from 'vue'
+import { AllPlaylists } from '@/composables/usePlaylists'
 
 const emit = defineEmits(['getPlaylistId'])
+console.log(AllPlaylists)
 </script>
 
 <template>

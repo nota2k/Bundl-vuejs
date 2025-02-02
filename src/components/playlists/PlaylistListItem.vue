@@ -1,55 +1,24 @@
-<script setup>
-import { ref, onMounted, defineEmits, defineProps } from 'vue'
-import axios from 'axios'
-import router from '@/router'
+<script setup lang="ts">
+import { defineEmits, defineProps } from 'vue'
 
 const emit = defineEmits(['getPlaylistId', 'getPlaylistName'])
 
-let playlists = ref([])
-let loading = ref(true)
+const props = defineProps({
+  playlist: Object,
+  id: String,
+  name: String
+})
 
-const emitPlaylist = (id) => {
+function emitPlaylist(id: string, name: string) {
   emit('getPlaylistId', id)
   emit('getPlaylistName', name)
 }
-
-onMounted(() => {
-  axios
-    .get('https://pantagruweb.club/tentacules/webhook/getplaylist', {
-      timeout: 10000
-    }) // Augmentez le délai d'attente à 10 secondes
-    .then((response) => {
-      console.log(response.data)
-      playlists.value = response.data
-    })
-    .catch((error) => {
-      console.error('Erreur lors de la récupération des playlists:', error.message)
-    })
-    .finally(() => {
-      loading.value = false
-    })
-})
 </script>
 
 <template>
-  <div class="playlist-wrapper">
-    <div v-if="loading">Chargement...</div>
-    <div v-else>
-      <div class="container">
-        <button class="close" @click="$emit('close')">Fermer</button>
-        <h2>Playlists Spawtify</h2>
-        <ul>
-          <li v-for="detail in playlists" :key="detail.id">
-            <router-link
-              :to="{ name: 'playlist', params: { id: detail.id } }"
-              @click="emitPlaylist(detail.id, detail.name)"
-              >{{ detail.name }}
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <li class="playlist-item" @click="emitPlaylist(props.id ?? '', props.name ?? '')">
+    {{ props.name }}
+  </li>
 </template>
 
 <style scoped>
@@ -86,7 +55,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   border: 2px solid black;
-  max-height: 60vh;
+  max-height: 70vh;
   position: relative;
 }
 
@@ -119,7 +88,7 @@ li:nth-child(odd) {
   background: #f9f9f9;
 }
 
-a {
+li {
   text-decoration: none;
   color: black;
   transition: 0.2s ease-in-out all;
@@ -127,7 +96,7 @@ a {
 }
 
 @media (hover: hover) {
-  a:hover {
+  li:hover {
     background-color: var(--yellow);
     font-weight: 500;
     margin-left: 5px;

@@ -1,18 +1,31 @@
 <script setup lang="ts">
-const emit = defineEmits(['exportJson'])
+import { defineEmits } from 'vue'
+import axios from 'axios'
+
+const emit = defineEmits(['exportJson', 'clearCache'])
+
+function syncLikedTrack() {
+  // axios
+  //   .get(`https://pantagruweb.club/tentacules/webhook/babines/liked?cache=false`)
+  //   .then((response) => {
+  //     console.log(response.data)
+  //     // videoData.value = response.data
+  //   })
+  emit('clearCache')
+}
 </script>
 
 <template>
   <aside>
     <ul class="actions">
       <li>
-        <a href="#" class="button primary">
+        <button id="sync" href="#" class="button primary" @click="syncLikedTrack()">
           <img class="dog" src="../assets/dog_1.svg" />
           <div class="label">
             <p>Sync</p>
             <img src="../assets/sync.png" />
           </div>
-        </a>
+        </button>
       </li>
       <li>
         <a href="#" class="button primary">
@@ -35,7 +48,7 @@ const emit = defineEmits(['exportJson'])
 <style scoped>
 aside {
   grid-column-start: 3;
-  grid-row-start: 2;
+  grid-row: 2 / 3;
   position: sticky;
   top: 5%;
   align-self: start;
@@ -50,12 +63,18 @@ li {
   position: relative;
 }
 
-li a {
+li a,
+li button {
   position: relative;
   z-index: 5;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+li button {
+  height: 100%;
+  width: 100%;
 }
 
 li::before {
